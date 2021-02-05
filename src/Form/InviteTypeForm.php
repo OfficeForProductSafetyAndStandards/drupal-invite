@@ -10,6 +10,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\invite\Entity\InviteSender;
 use Drupal\invite\InvitePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Form controller for Invite type edit forms.
@@ -18,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class InviteTypeForm extends EntityForm {
 
+  use StringTranslationTrait;
   /**
    * Plugin Manager.
    *
@@ -87,10 +89,10 @@ class InviteTypeForm extends EntityForm {
     $data = unserialize($entity->getData());
 
     $form['label'] = [
-      '#title' => t('Invite Type Label'),
+      '#title' => $this->('Invite Type Label'),
       '#type' => 'textfield',
       '#default_value' => $entity->label(),
-      '#description' => t('The human-readable name of this invite type. This name must be unique.'),
+      '#description' => $this->t('The human-readable name of this invite type. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -104,13 +106,13 @@ class InviteTypeForm extends EntityForm {
         'exists' => ['Drupal\invite\Entity\InviteType', 'load'],
         'source' => ['label'],
       ],
-      '#description' => t('A unique machine-readable name for this invite type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this invite type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
     $form['description'] = [
       '#type' => 'textarea',
-      '#title' => t('Description'),
-      '#description' => t('Description about the invite type.'),
+      '#title' => $this->t('Description'),
+      '#description' => $this->t('Description about the invite type.'),
       '#rows' => 5,
       '#default_value' => $entity->getDescription(),
     ];
@@ -124,8 +126,8 @@ class InviteTypeForm extends EntityForm {
     $form['target_role'] = [
       '#type' => 'select',
       '#required' => FALSE,
-      '#title' => t('Role'),
-      '#description' => t('Please select a role to apply to the invitee (Optional).'),
+      '#title' => $this->t('Role'),
+      '#description' => $this->t('Please select a role to apply to the invitee (Optional).'),
       '#options' => $options,
       '#default_value' => $data['target_role'],
     ];
@@ -144,7 +146,7 @@ class InviteTypeForm extends EntityForm {
       $form['send_method'] = [
         '#type' => 'checkboxes',
         '#required' => TRUE,
-        '#title' => t('Sending Method'),
+        '#title' => $this->t('Sending Method'),
         '#default_value' => $default_send_method,
         '#options' => $options,
       ];
