@@ -89,7 +89,7 @@ class InviteTypeForm extends EntityForm {
     $data = unserialize($entity->getData());
 
     $form['label'] = [
-      '#title' => $this->('Invite Type Label'),
+      '#title' => $this->t('Invite Type Label'),
       '#type' => 'textfield',
       '#default_value' => $entity->label(),
       '#description' => $this->t('The human-readable name of this invite type. This name must be unique.'),
