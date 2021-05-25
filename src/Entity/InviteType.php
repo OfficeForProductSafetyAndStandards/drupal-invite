@@ -29,6 +29,11 @@ use Drupal\invite\InviteTypeInterface;
  *     "label" = "label",
  *     "uuid" = "uuid",
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "uuid",
+ *   },
  *   links = {
  *     "canonical" = "/admin/structure/invite_type/{invite_type}",
  *     "add-form" = "/admin/structure/invite_type/add",

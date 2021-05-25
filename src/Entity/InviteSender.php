@@ -23,6 +23,12 @@ use Drupal\invite\InviteTypeInterface;
  *     "name" = "name",
  *     "uuid" = "uuid",
  *   },
+ *   config_export = {
+ *     "id",
+ *     "type",
+ *     "name",
+ *     "uuid",
+ *   },
  * )
  */
 class InviteSender extends ConfigEntityBase implements InviteTypeInterface {
