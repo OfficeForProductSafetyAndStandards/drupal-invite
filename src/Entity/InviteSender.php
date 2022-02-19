@@ -18,16 +18,14 @@ use Drupal\invite\InviteTypeInterface;
  *   config_prefix = "invite_sender",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
- *     "id" = "id",
- *     "type" = "type",
- *     "name" = "name",
  *     "uuid" = "uuid",
+ *     "id" = "id",
+ *     "sending_methods" = "sending_methods",
  *   },
  *   config_export = {
- *     "id",
- *     "type",
- *     "name",
  *     "uuid",
+ *     "id",
+ *     "sending_methods" = "sending_methods",
  *   },
  * )
  */

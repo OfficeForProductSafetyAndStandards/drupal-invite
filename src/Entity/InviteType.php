@@ -25,14 +25,18 @@ use Drupal\invite\InviteTypeInterface;
  *   config_prefix = "invite_type",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
+ *     "uuid" = "uuid",
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid",
+ *     "description" = "description",
+ *     "data" = "data",
  *   },
  *   config_export = {
+ *     "uuid",
  *     "id",
  *     "label",
- *     "uuid",
+ *     "description",
+ *     "data",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/invite_type/{invite_type}",
