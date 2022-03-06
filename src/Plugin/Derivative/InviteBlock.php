@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Derivative\DeriverInterface;
 use Drupal\invite\Entity\InviteSender;
 
 /**
- * InviteBlock Class.
+ * Invite Block Class.
  */
 class InviteBlock implements DeriverInterface {
 

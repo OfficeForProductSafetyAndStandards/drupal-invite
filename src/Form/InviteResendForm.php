@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
 
 /**
- * Class InviteResendForm.
+ * Class to Invite Resend Form.
  *
  * @package Drupal\invite\Form
  */

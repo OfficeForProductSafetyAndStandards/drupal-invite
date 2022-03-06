@@ -10,7 +10,7 @@ use Drupal\invite\InviteAcceptEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class InviteAccept.
+ * Class to Invite Accept.
  *
  * @package Drupal\invite\Controller
  */

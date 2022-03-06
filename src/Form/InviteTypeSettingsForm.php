@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class InviteTypeSettingsForm.
+ * Class to Invite Type Settings Form.
  *
  * @package Drupal\invite\Form
  *

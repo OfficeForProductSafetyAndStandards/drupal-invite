@@ -33,6 +33,7 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
    * Getter for the messenger service.
    *
    * @return \Drupal\Core\Messenger\MessengerInterface
+   *   will return the messenger.
    */
   public function getMessenger() {
     return $this->messenger;
@@ -41,6 +42,12 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
   /**
    * Constructs invite_by_email plugin.
    *
+   * @param array $configuration
+   *   Array with configurations.
+   * @param string $plugin_id
+   *   The plugin id.
+   * @param string $plugin_definition
+   *   Plugin Definition.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
@@ -65,10 +72,10 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
    * {@inheritdoc}
    */
   public function send($invite) {
-    /*
-     * @var $token \Drupal\token\Token
-     * @var $mail \Drupal\Core\Mail\MailManager
-     */
+    /**
+      * @var \Drupal\token\Token $token
+      * @var \Drupal\Core\Mail\MailManager $mail
+      */
     $bubbleable_metadata = new BubbleableMetadata();
     $token = \Drupal::service('token');
     $mail = \Drupal::service('plugin.manager.mail');
@@ -118,4 +125,3 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
   }
 
 }
-

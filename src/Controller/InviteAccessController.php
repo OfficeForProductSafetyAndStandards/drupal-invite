@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class InviteAccessController extends ControllerBase {
 
+  /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
+   */
   protected $routeMatch;
 
   /**

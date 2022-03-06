@@ -2,7 +2,6 @@
 
 namespace Drupal\invite\Entity;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;

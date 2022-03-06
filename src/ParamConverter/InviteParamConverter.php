@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Class InviteParamConverter.
+ *
+ * Class to convert parameters.
  */
 class InviteParamConverter implements ParamConverterInterface {
 

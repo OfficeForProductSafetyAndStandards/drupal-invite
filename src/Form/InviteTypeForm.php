@@ -74,7 +74,7 @@ class InviteTypeForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\invite\Entity\InviteType */
+    /** @var \Drupal\invite\Entity\InviteType $entity */
     $form = parent::form($form, $form_state);
     $entity = $this->entity;
     $is_new = $entity->isNew();

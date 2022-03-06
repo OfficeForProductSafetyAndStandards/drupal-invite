@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
 
 /**
- * Class InviteWithdrawForm.
+ * Class to Invite Withdraw Form.
  *
  * @package Drupal\invite\Form
  */

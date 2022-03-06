@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class InviteConfig.
+ * Class to Invite Config.
  *
  * @package Drupal\invite\Form
  */

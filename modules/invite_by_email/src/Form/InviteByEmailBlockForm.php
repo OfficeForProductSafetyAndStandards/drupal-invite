@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\invite\Entity\Invite;
 
 /**
- * Class InviteByEmailBlockForm.
+ * Class for Email Block Form.
  *
  * @package Drupal\invite\Form
  */
