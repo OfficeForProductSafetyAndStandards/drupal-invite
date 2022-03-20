@@ -4,6 +4,7 @@ namespace Drupal\invite\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Url;
 use Drupal\invite\InviteConstants;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,13 +29,21 @@ class InviteList extends ControllerBase {
   public $inviteStatus;
 
   /**
+   * A module manager object.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new InviteList object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   Connection database.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler) {
     $this->database = $database;
+    $this->moduleHandler = $module_handler;
     $this->inviteStatus = [
       InviteConstants::INVITE_VALID => $this->t('Active'),
       InviteConstants::INVITE_WITHDRAWN => $this->t('Withdrawn'),
@@ -48,7 +57,8 @@ class InviteList extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('database'),
+      $container->get('module_handler')
     );
   }
 
@@ -70,10 +80,12 @@ class InviteList extends ControllerBase {
     $query = $this->database->select('invite', 'i');
     $query->fields('ufd', ['mail']);
     $query->fields('i', ['id', 'status']);
-    $query->fields('ie', ['field_invite_email_address_value']);
     $query->leftJoin('users', 'u', 'i.user_id = u.uid');
     $query->leftJoin('users_field_data', 'ufd', 'u.uid = ufd.uid');
-    $query->leftJoin('invite__field_invite_email_address', 'ie', 'i.id = ie.entity_id');
+    if ($this->moduleHandler->moduleExists('invite_by_email')) {
+      $query->fields('ie', ['field_invite_email_address_value']);
+      $query->leftJoin('invite__field_invite_email_address', 'ie', 'i.id = ie.entity_id');
+    }
     $query->orderBy('i.id', 'desc');
 
     $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender');
