@@ -152,15 +152,25 @@ class InviteTypeForm extends EntityForm {
       ];
     }
     else {
+      $this->messenger->addWarning($this->t('Please enable a sending method module such as Invite by email.'));
       $form['send_method'] = [
         '#type' => 'item',
         '#markup' => $this->t('Please enable a sending method module such as Invite by email.'),
       ];
-      $form['actions']['submit']['#disabled'] = TRUE;
-
     }
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    if (empty($this->pluginManager->getDefinitions())) {
+      $actions['submit']['#disabled'] = TRUE;
+    }
+    return $actions;
   }
 
   /**
