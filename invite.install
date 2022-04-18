@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the Invite.
  */
 
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
 
 /**
@@ -19,4 +20,13 @@ function invite_install() {
     '@url_invite' => 'https://www.drupal.org/project/invite',
     '@url' => Url::fromRoute('invite.invite_config')->toString(),
   ]));
+}
+
+/**
+ * Insure the Invite entity Changed field exists in the database.
+ */
+function invite_update_8101() {
+  $field_storage_definition = BaseFieldDefinition::create('changed')->setLabel(t('Changed'))->setDescription(t('The time that the entity was last edited.'));
+
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('changed', 'invite', 'invite', $field_storage_definition);
 }
