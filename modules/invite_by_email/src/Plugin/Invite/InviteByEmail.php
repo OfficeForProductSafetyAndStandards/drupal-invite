@@ -3,9 +3,10 @@
 namespace Drupal\invite_by_email\Plugin\Invite;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\invite\InvitePluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,14 +31,18 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
   protected $messenger;
 
   /**
-   * Getter for the messenger service.
+   * Mail manager service.
    *
-   * @return \Drupal\Core\Messenger\MessengerInterface
-   *   will return the messenger.
+   * @var \Drupal\Core\Mail\MailManagerInterface
    */
-  public function getMessenger() {
-    return $this->messenger;
-  }
+  protected $mailManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
 
   /**
    * Constructs invite_by_email plugin.
@@ -50,10 +55,23 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
    *   Plugin Definition.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
+   *   The mail manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MessengerInterface $messenger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MessengerInterface $messenger,
+    MailManagerInterface $mail_manager,
+    LanguageManagerInterface $language_manager
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->messenger = $messenger;
+    $this->messenger        = $messenger;
+    $this->mailManager      = $mail_manager;
+    $this->languageManager  = $language_manager;
   }
 
   /**
@@ -64,7 +82,9 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('plugin.manager.mail'),
+      $container->get('language_manager')
     );
   }
 
@@ -72,56 +92,28 @@ class InviteByEmail extends PluginBase implements InvitePluginInterface, Contain
    * {@inheritdoc}
    */
   public function send($invite) {
-    /**
-      * @var \Drupal\token\Token $token
-      * @var \Drupal\Core\Mail\MailManager $mail
-      */
-    $bubbleable_metadata = new BubbleableMetadata();
-    $token = \Drupal::service('token');
-    $mail = \Drupal::service('plugin.manager.mail');
-    $mail_key = $invite->get('type')->value;
-    // Prepare message.
-    $message = $mail->mail('invite_by_email', $mail_key, $invite->get('field_invite_email_address')->value, $invite->activeLangcode, [], $invite->getOwner()
-      ->getEmail(), FALSE);
-    // If HTML email.
-    if (unserialize(\Drupal::config('invite.invite_type.' . $invite->get('type')->value)
-      ->get('data'))['html_email']
-    ) {
-      $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
-    }
-    $message['subject'] = $token->replace($invite->get('field_invite_email_subject')->value, ['invite' => $invite], [], $bubbleable_metadata);
-    $body = [
-      '#theme' => 'invite_by_email',
-      '#body' => $token->replace($invite->get('field_invite_email_body')->value, ['invite' => $invite], [], $bubbleable_metadata),
+    $module         = 'invite_by_email';
+    $key            = $invite->get('type')->value;
+    $to             = $invite->get('field_invite_email_address')->value;
+    $from           = $invite->getOwner()->getEmail();
+    $language_code  = $this->languageManager->getDefaultLanguage()->getId();
+    $send_now       = TRUE;
+    $params         = [
+      'invite'  => $invite,
     ];
-    $message['body'] = \Drupal::service('renderer')
-      ->render($body)
-      ->__toString();
-    // Send.
-    $system = $mail->getInstance([
-      'module' => 'invite_by_email',
-      'key' => $mail_key,
-    ]);
 
-    $result = $system->mail($message);
+    $result = $this->mailManager->mail($module, $key, $to, $language_code, $params, $from, $send_now);
 
     if ($result) {
-
-      $this->getMessenger()->addStatus($this->t('Invitation has been sent.'));
-
-      $mail_user = $message['to'];
-
-      \Drupal::logger('invite')->notice('Invitation has been sent for: @mail_user.', [
-        '@mail_user' => $mail_user,
-      ]);
+      $this->messenger->addStatus($this->t('Invitation has been sent.'));
+      \Drupal::logger('invite')->notice(
+        'Invitation has been sent for: @mail_user.', ['@mail_user' => $to]
+      );
     }
     else {
-
-      $this->getMessenger()->addStatus($this->t('Failed to send a message.'), 'error');
-
+      $this->messenger->addStatus($this->t('Failed to send a message.'), 'error');
       \Drupal::logger('invite')->error('Failed to send a message.');
     }
-
   }
 
 }

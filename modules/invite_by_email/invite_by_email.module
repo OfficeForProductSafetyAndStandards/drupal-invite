@@ -5,8 +5,10 @@
  * Contains invite_by_email.module.
  */
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\invite\InviteConstants;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\invite_by_email\Plugin\Invite\InviteByEmail;
 
 /**
  * Implements hook_form_alter().
@@ -148,4 +150,36 @@ function invite_by_email_form_user_register_form_alter(&$form, FormStateInterfac
     $form['account']['mail']['#default_value'] = $invite_object->field_invite_email_address->value;
     $form['account']['mail']['#disabled'] = TRUE;
   }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function invite_by_email_mail($key, &$message, $params) {
+  $token_service = \Drupal::token();
+  $language_manager = \Drupal::languageManager();
+  $langcode = $message['langcode'];
+  $variables = ['invite' => $params['invite']];
+
+  $language = $language_manager->getLanguage($langcode);
+  $original_language = $language_manager->getConfigOverrideLanguage();
+  $language_manager->setConfigOverrideLanguage($language);
+
+  $invite_type = $params['invite']->get('type')->value;
+  $is_html = unserialize(\Drupal::config("invite.invite_type.$invite_type")->get('data'))['html_email'] ?? FALSE;
+  $subject = $params['invite']->get('field_invite_email_subject')->value;
+  $body = $params['invite']->get('field_invite_email_body')->value;
+
+  $token_options = ['langcode' => $langcode];
+  $body_element = [
+    '#theme'  => 'invite_by_email',
+    '#body'   => $token_service->replace($body, $variables, $token_options),
+  ];
+  $message['subject'] .= PlainTextOutput::renderFromHtml($token_service->replace($subject, $variables, $token_options));
+  $message['body'][] = \Drupal::service('renderer')->render($body_element);
+  if ($is_html) {
+    $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+  }
+
+  $language_manager->setConfigOverrideLanguage($original_language);
 }
