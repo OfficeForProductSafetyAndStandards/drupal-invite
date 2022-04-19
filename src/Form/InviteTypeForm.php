@@ -129,7 +129,7 @@ class InviteTypeForm extends EntityForm {
       '#title' => $this->t('Role'),
       '#description' => $this->t('Please select a role to apply to the invitee (Optional).'),
       '#options' => $options,
-      '#default_value' => $data['target_role'],
+      '#default_value' => $data['target_role'] ?? '',
     ];
 
     // List the available sending methods.
