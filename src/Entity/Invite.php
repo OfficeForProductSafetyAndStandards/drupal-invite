@@ -48,7 +48,7 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/admin/structure/invite/{invite}/edit",
  *     "collection" = "/admin/structure/invite",
  *   },
- *   field_ui_base_route = "invite.settings"
+ *   field_ui_base_route = "invite.invite_config"
  * )
  */
 class Invite extends ContentEntityBase implements InviteInterface {

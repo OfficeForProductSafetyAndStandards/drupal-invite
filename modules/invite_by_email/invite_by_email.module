@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Url;
 use Drupal\invite\InviteConstants;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\invite_by_email\Plugin\Invite\InviteByEmail;
@@ -80,7 +81,10 @@ function invite_by_email_form_alter(&$form, FormStateInterface $form_state, $for
     $form['invite_by_email']['help'] = [
       '#type' => 'container',
       'help' => [
-        '#markup' => t('You may update the default subject and body for all invites on the <a href="@fields_path">fields edit page</a>.', ['@fields_path' => '/admin/structure/invite/settings/fields']),
+        '#markup' => t(
+          'You may update the default subject and body for all invites on the <a href="@fields_path">fields edit page</a>.',
+          ['@fields_path' => Url::fromRoute('entity.invite.field_ui_fields')->toString()]
+        ),
       ],
       '#states' => [
         'invisible' => [
