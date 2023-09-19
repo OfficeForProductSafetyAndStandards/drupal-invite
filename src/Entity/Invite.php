@@ -68,7 +68,7 @@ class Invite extends ContentEntityBase implements InviteInterface {
     parent::preCreate($storage_controller, $values);
     // Generate unique registration code.
     do {
-      $reg_code = user_password(10);
+      $reg_code = \Drupal::service('password_generator')->generate(10);
       $result = Database::getConnection()
         ->query('SELECT reg_code FROM {invite} WHERE reg_code = :reg_code', [':reg_code' => $reg_code])
         ->fetchField();

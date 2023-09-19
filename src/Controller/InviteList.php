@@ -104,7 +104,7 @@ class InviteList extends ControllerBase {
           'status' => $this->inviteStatus[$row->status],
           'mail' => $row->mail,
           'field_invite_email_address_value' => $row->field_invite_email_address_value,
-          'operations' => render($operations),
+          'operations' => \Drupal::service('renderer')->render($operations),
         ],
       ];
     }

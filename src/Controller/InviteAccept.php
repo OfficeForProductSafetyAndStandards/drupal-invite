@@ -97,7 +97,7 @@ class InviteAccept extends ControllerBase {
       'invite' => &$invite,
     ]);
 
-    $this->dispatcher->dispatch('invite_accept', $invite_accept);
+    $this->dispatcher->dispatch($invite_accept, 'invite_accept');
     $this->messenger->addStatus($message, $type);
 
     return $this->redirect($redirect);

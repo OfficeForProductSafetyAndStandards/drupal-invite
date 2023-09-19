@@ -2,7 +2,7 @@ name: Invite Link
 type: module
 description: Allow users to invite others to the site by generating an invitation link.
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: Invite
 
 dependencies:
