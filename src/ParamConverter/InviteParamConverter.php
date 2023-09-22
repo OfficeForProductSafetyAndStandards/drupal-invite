@@ -25,6 +25,7 @@ class InviteParamConverter implements ParamConverterInterface {
    */
   public function convert($reg_code, $definition, $name, array $defaults) {
     $invite = \Drupal::entityQuery('invite')
+      ->accessCheck()
       ->condition('reg_code', $reg_code)
       ->execute();
     return Invite::load(reset($invite));
