@@ -17,6 +17,7 @@ function invite_user_presave(User $account) {
   if (!empty($_SESSION['invite_code'])) {
     // Update invite when user accepts.
     $id = Drupal::entityQuery('invite')
+      ->accessCheck()
       ->condition('reg_code', $_SESSION['invite_code'])
       ->execute();
     $invite = Invite::load(reset($id));
@@ -39,6 +40,7 @@ function invite_user_insert(User $account) {
   if (!empty($_SESSION['invite_code'])) {
     // Update invite when user accepts.
     $id = Drupal::entityQuery('invite')
+      ->accessCheck()
       ->condition('reg_code', $_SESSION['invite_code'])
       ->execute();
     $invite = Invite::load(reset($id));

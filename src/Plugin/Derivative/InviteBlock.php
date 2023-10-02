@@ -26,6 +26,7 @@ class InviteBlock implements DeriverInterface {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $derivatives = [];
     foreach (InviteSender::loadMultiple(\Drupal::entityQuery('invite_sender')
+      ->accessCheck()
       ->condition('sending_methods', $base_plugin_definition['provider'], 'CONTAINS')
       ->execute()) as $sending_method) {
       $sending_method_id = $sending_method->id();
